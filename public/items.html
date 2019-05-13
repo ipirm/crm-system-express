@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width" />
+      <title>FIDAN DIPLOM WORK</title>
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+      <link rel="icon" href="favicon.ico" type="image/x-icon">
+      <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+      <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+      <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+      <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+      <link href="plugins/morrisjs/morris.css" rel="stylesheet" />
+      <link href="css/style.css" rel="stylesheet">
+      <link href="css/themes/all-themes.css" rel="stylesheet" />
+      <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+   </head>
+   <body class="theme-red">
+      <div class="page-loader-wrapper">
+         <div class="loader">
+            <div class="preloader">
+               <div class="spinner-layer pl-red">
+                  <div class="circle-clipper left">
+                     <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                     <div class="circle"></div>
+                  </div>
+               </div>
+            </div>
+            <p>Please wait...</p>
+         </div>
+      </div>
+      <div class="overlay"></div>
+      <div class="search-bar">
+         <div class="search-icon">
+            <i class="material-icons">search</i>
+         </div>
+         <input type="text" placeholder="START TYPING..." id="search-text" onkeyup="tableSearch()">
+         <div class="close-search">
+            <i class="material-icons">close</i>
+         </div>
+      </div>
+      <nav class="navbar">
+         <div class="container-fluid">
+            <div class="navbar-header">
+               <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+               <a href="javascript:void(0);" class="bars"></a>
+               <a class="navbar-brand" href="index.html">FIDAN DIPLOM WORK</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+               <ul class="nav navbar-nav navbar-right">
+                  <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <!-- #Top Bar -->
+      <section>
+         <!-- Left Sidebar -->
+         <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+               <div class="image">
+                  <img src="images/user.png" width="48" height="48" alt="User" />
+               </div>
+               <div class="info-container">
+                  <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fidan Kerimova</div>
+                  <div class="email">fidan.fidan@fidan.com</div>
+               </div>
+            </div>
+            <div class="menu">
+               <ul class="list">
+                  <li class="header">MAIN NAVIGATION</li>
+                  <li class="">
+                     <a href="index.html">
+                     <i class="material-icons">home</i>
+                     <span>Home</span>
+                     </a>
+                  </li>
+                  <li class="">
+                     <a href="table.html">
+                     <i class="material-icons">home</i>
+                     <span>Customers</span>
+                     </a>
+                  </li>
+                  <li class="">
+                     <a href="items.html">
+                     <i class="material-icons">home</i>
+                     <span>Products</span>
+                     </a>
+                  </li>
+                  <li class="">
+                     <a href="bookkeeping.html">
+                     <i class="material-icons">home</i>
+                     <span>Invoices</span>
+                     </a>
+                  </li>
+               </ul>
+            </div>
+         </aside>
+      </section>
+      <div class="table--users">
+         <h2>Products</h2>
+         <form name="customerForm">
+            <input type="hidden" name="id" value="0" />
+            <div class="form-group">
+               <label for="itemmumber">Item number:</label>
+               <input class="form-control" name="itemmumber" />
+            </div>
+            <div class="form-group">
+               <label for="nameitem">Item name:</label>
+               <input class="form-control" name="nameitem" />
+            </div>
+            <div class="form-group">
+               <label for="unit">Unit: </label>
+               <input class="form-control" name="unit" />
+            </div>
+            <div class="form-group">
+               <label for="price">Price: </label>
+               <input class="form-control" name="price" />
+            </div>
+            <div class="form-group">
+               <label for="country">Country: </label>
+               <input class="form-control" name="country" />
+            </div>
+            <div class="panel-body">
+               <button type="submit" class="btn btn-sm btn-primary">Save date</button>
+               <a id="reset" class="btn btn-sm btn-primary">Reset</a>
+            </div>
+         </form>
+         <table class="table table-bordered" style="background-color: #fff;" id="info-table">
+            <thead>
+               <tr>
+                  <th>Id</th>
+                  <th>Item Number</th>
+                  <th>Name Item</th>
+                  <th>Unit</th>
+                  <th>Price</th>
+                  <th>Country</th>
+               </tr>
+            </thead>
+            <tbody>
+            </tbody>
+         </table>
+         <script>		
+            // Получение всех пользователей
+            function GetProducts() {
+            $.ajax({
+            url: "/api/products",
+            type: "GET",
+            contentType: "application/json",
+            success: function (products) {
+               var rows = "";
+               $.each(products, function (index, product) {
+                   // добавляем полученные элементы в таблицу
+                   rows += row(product);
+               })
+               $("table tbody").prepend(rows);
+            }
+            });
+            }
+            // Получение одного пользователя
+            function GetProduct(id) {
+            $.ajax({
+            url: "/api/products/"+id,
+            type: "GET",
+            contentType: "application/json",
+            success: function (product) {
+               var form = document.forms["customerForm"];
+               form.elements["id"].value = product._id;
+               form.elements["itemmumber"].value = product.itemmumber;
+               form.elements["nameitem"].value = product.nameitem;
+            form.elements["unit"].value = product.unit;
+               form.elements["price"].value = product.price;
+            form.elements["country"].value = product.country;
+            }
+            });
+            }
+            // Добавление пользователя
+            function CreateProduct(productItemmumber, productNameitem, productUnit, productPrice, productCountry) {
+            $.ajax({
+            url: "api/products",
+            contentType: "application/json",
+            method: "POST",
+            data: JSON.stringify({
+            itemmumber: productItemmumber,
+            nameitem: productNameitem, 
+            unit: productUnit, 
+            price: productPrice,
+            country: productCountry
+            }),
+            success: function (product) {
+               reset();
+               $("table tbody").prepend(row(product));
+            }
+            })
+            }
+            debugger;
+            // Изменение пользователя
+            function EditProduct(productId, productItemmumber, productNameitem, productUnit, productPrice, productCountry) {
+            $.ajax({
+            url: "api/products",
+            contentType: "application/json",
+            method: "PUT",
+            data: JSON.stringify({
+               id: productId,
+               itemmumber: productItemmumber,
+            nameitem: productNameitem, 
+            unit: productUnit, 
+            price: productPrice,
+            country: productCountry
+            }),
+            success: function (product) {
+               reset();
+               
+               $("tr[data-rowid='" + product._id + "']").replaceWith(row(product));
+            }
+            })
+            }
+            
+            // сброс формы
+            function reset() {
+            var form = document.forms["customerForm"];
+            form.reset();
+            form.elements["id"].value = 0;
+            }
+            
+            // Удаление пользователя
+            function DeleteProduct(id) {
+            $.ajax({
+            url: "api/products/"+id,
+            contentType: "application/json",
+            method: "DELETE",
+            success: function (product) {
+               console.log(product);
+               $("tr[data-rowid='" + product._id + "']").remove();
+            }
+            })
+            }
+            
+            var row = function (product) {
+            return "<tr data-rowid='" + product._id + "'><td>" + product._id + "</td>" +
+              "<td>" + product.itemmumber + "</td> <td>" + product.nameitem + "</td>" +
+            "<td>" + product.unit + "</td> <td>" + product.price + "</td>" +
+            "<td>" + product.country + "</td>" +
+              "<td><a class='editLink' data-id='" + product._id + "'>Update</a> | " +
+               "<a class='removeLink' data-id='" + product._id + "'>Delete</a></td></tr>";
+            }
+            // сброс значений формы
+            $("#reset").click(function (e) {
+            
+            e.preventDefault();
+            reset();
+            })
+            
+            // отправка формы
+            $("form").submit(function (e) {
+            e.preventDefault();
+            var id = this.elements["id"].value;
+            var itemmumber = this.elements["itemmumber"].value;
+            var nameitem = this.elements["nameitem"].value;
+            var unit = this.elements["unit"].value;
+            var price = this.elements["price"].value;
+            var country = this.elements["country"].value;
+            if (id == 0)
+            CreateProduct(itemmumber, nameitem, unit, price, country);
+            else
+            EditProduct(id, itemmumber, nameitem, unit, price, country);
+            });
+            debugger;
+            // нажимаем на ссылку Изменить
+            $("body").on("click", ".editLink", function () {
+            var id = $(this).data("id");
+            GetProduct(id);
+            })
+            // нажимаем на ссылку Удалить
+            $("body").on("click", ".removeLink", function () {
+            var id = $(this).data("id");
+            DeleteProduct(id);
+            })
+            
+            // загрузка пользователей
+            GetProducts();
+         </script>
+         <script>
+            function tableSearch() {
+            var phrase = document.getElementById('search-text');
+            var table = document.getElementById('info-table');
+            var regPhrase = new RegExp(phrase.value, 'i');
+             console.log(regPhrase);
+            var flag = false;
+            for (var i = 1; i < table.rows.length; i++) {
+               flag = false;
+               for (var j = table.rows[i].cells.length - 1; j >= 0; j--) {
+                   flag = regPhrase.test(table.rows[i].cells[j].innerHTML);
+                   if (flag) break;
+               }
+               if (flag) {
+                   table.rows[i].style.display = "";
+               } else {
+                   table.rows[i].style.display = "none";
+               }
+            
+            }
+            }
+         </script>
+      </div>
+      <script src="js/main.js"></script>
+      <script src="plugins/jquery/jquery.min.js"></script>
+      <!-- Bootstrap Core Js -->
+      <script src="plugins/bootstrap/js/bootstrap.js"></script>
+      <!-- Select Plugin Js -->
+      <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
+      <!-- Slimscroll Plugin Js -->
+      <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+      <!-- Waves Effect Plugin Js -->
+      <script src="plugins/node-waves/waves.js"></script>
+      <!-- Jquery CountTo Plugin Js -->
+      <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+      <!-- Morris Plugin Js -->
+      <script src="plugins/raphael/raphael.min.js"></script>
+      <script src="plugins/morrisjs/morris.js"></script>
+      <!-- ChartJs -->
+      <script src="plugins/chartjs/Chart.bundle.js"></script>
+      <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+      <!-- Custom Js -->
+      <script src="js/admin.js"></script>
+      <script src="js/pages/index.js"></script>
+      <!-- Demo Js -->
+      <script src="js/demo.js"></script>
+   </body>
+</html>
